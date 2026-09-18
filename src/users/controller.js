@@ -1,4 +1,5 @@
 import Users from '../auth/schema.js';
+import Visitors from '../auth/visitor-schema.js';
 import bcrypt from 'bcryptjs';
 
 export const getAllUsers = async(req, res) => {
@@ -115,3 +116,17 @@ export const deleteUser = async(req, res) => {
         return res.status(500).json({success: false, message: 'Internal Server Error'});
     }
 };
+
+export const viewvistors = async(req, res) => {
+    try {
+        const all_visitors = await Visitors.findAll();
+        if(!all_visitors || all_visitors.length == 0){
+            return res.status(404).json({success: false, message: 'No vistors fetched record'});
+        };
+        return res.status(200).json({success: true, message: 'Visitors Fetched', data: all_visitors})
+    } catch (error) {
+        console.error(`Error with vieweing vistors records ${error}`);
+        return res.status(500).json({success: false, message: 'Internal Server Error'});
+    }
+};
+

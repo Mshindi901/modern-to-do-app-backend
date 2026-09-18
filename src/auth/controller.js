@@ -2,6 +2,7 @@ import Users from "./schema.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import Visitors from "./visitor-schema.js";
 dotenv.config();
 
 
@@ -29,10 +30,11 @@ export const signup = async(req, res) => {
 
 export const signin = async(req, res) => {
     try {
-        const {email, password} = req.body;
+        const {email, password, logged_in, time} = req.body;
         if(!email || !password){
             return res.status(400).json({success: false, message: 'Provide email and password'});
         };
+        const ip = req.ip;
         const is_user = await Users.findOne({where:{email: email}});
         if(!is_user){
             return res.status(404).json({success: false, message: 'Email does not exist'});
@@ -41,6 +43,8 @@ export const signin = async(req, res) => {
         if(!is_password){
             return res.status(404).json({success: false, message: 'Invalid Password'});
         };
+        //new-vistor record
+        const new_visitor = await Visitors.create({user_name: is_user.name, user_email: is_user.email, user_ip: ip, logged_in, time});
         const token = jwt.sign({id: is_user.id, role: is_user.role}, process.env.ACCESS_TOKEN, {expiresIn: '1h'});
         return res.status(200).json({success: true, message: 'Users signed in', data: token})
     } catch (error) {
