@@ -40,10 +40,11 @@ export const get_task_by_user = async(req, res) => {
 export const get_task_by_project = async(req, res) => {
     try {
         const {id} = req.params;
-        if(!id){
+        const user_id = req.user.id;
+        if(!id || !user_id){
             return res.status(400).json({success: false, message: 'Provide record id'});
         };
-        const tasks = await Tasks.findAll({project_id: id});
+        const tasks = await Tasks.findAll({where: {project_id: id, user_id: user_id}});
         if(!tasks || tasks.length == 0){
             return res.status(404).json({success: false, message: 'No tasks Fetched'});
         };
