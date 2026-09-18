@@ -7,7 +7,7 @@ dotenv.config();
 
 export const signup = async(req, res) => {
     try {
-        const {name, email, password} = req.body;
+        const {name, email, password, role} = req.body;
         if(!name || !email || !password){
             return res.status(400).json({success: false, message: 'Provide full info'});
         };
@@ -16,7 +16,7 @@ export const signup = async(req, res) => {
             return res.status(404).json({success: false, message: 'Email already exists'});
         };
         const hashed_password = await bcrypt.hash(password, 12);
-        const new_user = await Users.create({name, email, password: hashed_password});
+        const new_user = await Users.create({name, email, password: hashed_password, role});
         if(!new_user){
             return res.status(404).json({success: false, message: 'Failed to create user'})
         };
