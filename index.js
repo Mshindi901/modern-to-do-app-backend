@@ -12,6 +12,7 @@ dotenv.config();
 
 const PORT = process.env.PORT;
 const app = express();
+app.set('trust proxy', true);
 app.use(express.json());
 app.use(cors({origin: ['https://modern-to-do-app-frontend.vercel.app']}))
 

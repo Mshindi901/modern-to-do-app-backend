@@ -35,7 +35,10 @@ export const signin = async(req, res) => {
             return res.status(400).json({success: false, message: 'Provide email and password'});
         };
 
-        const ip = req.ip;
+        const forwardedIp = req.headers['x-forwarded-for']?.split(',')[0]?.trim();
+        const rawIp = forwardedIp || req.socket?.remoteAddress || req.ip || 'unknown';
+        const normalizeIp = (value) => value?.startsWith('::ffff:') ? value.replace('::ffff:', '') : value;
+        const ip = normalizeIp(rawIp);
         const is_user = await Users.findOne({where:{email: email}});
         if(!is_user){
             return res.status(404).json({success: false, message: 'Email does not exist'});
