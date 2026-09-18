@@ -58,7 +58,7 @@ export const get_task_by_project = async(req, res) => {
 export const get_task_by_priority = async(req, res) => {
     try {
         const {priority} = req.body;
-        const {user_id} = req.user.id
+        const user_id = req.user.id;
         if(!priority){
             return res.status(400).json({success: false, message: 'Offer a prioity level'});
         };
