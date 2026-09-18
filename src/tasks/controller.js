@@ -110,11 +110,12 @@ export const get_starred_tasks = async(req, res) => {
 export const update_task_priority = async(req, res) => {
     try {
         const {id} = req.params;
+        const user_id = req.user.id;
         const {priority} = req.body;
         if(!id){
             return res.status(400).json({success: false, message: 'Please provide record id'});
         };
-        const task = await Tasks.findByPk(id);
+        const task = await Tasks.findOne({where: {id: id, user_id: user_id}});
         if(!task){
             return res.status(404).json({success: false, message: 'Invalid Id'});
         };
