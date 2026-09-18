@@ -13,7 +13,7 @@ dotenv.config();
 const PORT = process.env.PORT;
 const app = express();
 app.use(express.json());
-app.use(cors({origin: ['http://localhost:5174']}))
+app.use(cors({origin: ['https://modern-to-do-app-frontend.vercel.app']}))
 
 
 app.use('/api', AuthRoutes);
