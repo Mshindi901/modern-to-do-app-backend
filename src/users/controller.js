@@ -119,11 +119,17 @@ export const deleteUser = async(req, res) => {
 
 export const viewvistors = async(req, res) => {
     try {
-        const all_visitors = await Visitors.findAll();
+        const all_visitors = await Visitors.findAll({ raw: true });
         if(!all_visitors || all_visitors.length == 0){
             return res.status(404).json({success: false, message: 'No vistors fetched record'});
         };
-        return res.status(200).json({success: true, message: 'Visitors Fetched', data: all_visitors})
+
+        const normalizedVisitors = all_visitors.map((visitor) => ({
+            ...visitor,
+            logged_at: visitor.logged_at || visitor.logged_in,
+        }));
+
+        return res.status(200).json({success: true, message: 'Visitors Fetched', data: normalizedVisitors})
     } catch (error) {
         console.error(`Error with vieweing vistors records ${error}`);
         return res.status(500).json({success: false, message: 'Internal Server Error'});
