@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get('/users', authenticate, authorize('admin'), getAllUsers);
 router.post('/user/email', authenticate, authorize('admin'), getUserByEmail);
-router.post('/user', authenticate, authorize('user'),getUserById);
+router.post('/user', authenticate, authorize('user', 'admin'), getUserById);
 router.put('/user/info', authenticate, authorize('user'), updateUser);
 router.put('/user/password', authenticate, authorize('user'), updateUserPassword);
 router.delete('/user/:id', authenticate, authorize('admin', 'user'), deleteUser);
