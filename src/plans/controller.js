@@ -2,12 +2,12 @@ import Plans from "./schema.js";
 
 export const new_plan = async(req, res) => {
     try {
-        const {task_id, title, description, start_at, end_at} = req.body;
+        const {task_id, title, description, date, start_at, end_at} = req.body;
         const user_id = req.user.id;
         if(!task_id || !user_id || !title || !start_at || !end_at){
             return res.status(400).json({success: false, message: 'Provide full info and be authenticated, please login'});
         };
-        const newPlan = await Plans.create({task_id, user_id, title, description, start_at, end_at});
+        const newPlan = await Plans.create({task_id, user_id, title, description, date, start_at, end_at});
         if(!newPlan){
             return res.status(404).json({success: false, message: 'Failed to create new plan'})
         };
@@ -74,7 +74,7 @@ export const get_plan_by_id = async(req, res) => {
 export const update_plan = async(req, res) => {
     try {
         const {id} = req.params;
-        const {task_id, title, description, start_at, end_at} = req.body;
+        const {task_id, title, description, date, start_at, end_at} = req.body;
         if(!id){
             return res.status(400).json({success: true, message: 'Provide record id'});
         };
@@ -82,7 +82,7 @@ export const update_plan = async(req, res) => {
         if(!plan){
             return res.status(404).json({success: false, message: 'Invalid record id'})
         };
-        const updated_plan = await plan.update({task_id, title, description, start_at, end_at});
+        const updated_plan = await plan.update({task_id, title, description, date, start_at, end_at});
         if(!updated_plan){
             return res.status(404).json({success: false, message: 'failed to update the record'});
         };

@@ -32,6 +32,10 @@ const Plans = sequelize.define('plans', {
         type: DataTypes.TEXT,
         allowNull: true
     },
+    date: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
     start_at: {
         type:DataTypes.STRING,
         allowNull: false
