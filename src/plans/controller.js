@@ -1,20 +1,21 @@
 import Plans from "./schema.js";
 
-export const new_plan = async(req, res) => {}
-try {
-    const {task_id, title, description, start_at, end_at} = req.body;
-    const user_id = req.user.id;
-    if(!task_id || !user_id || !title || !start_at || !end_at){
-        return res.status(400).json({success: false, message: 'Provide full info and be authenticated, please login'});
+export const new_plan = async(req, res) => {
+    try {
+        const {task_id, title, description, start_at, end_at} = req.body;
+        const user_id = req.user.id;
+        if(!task_id || !user_id || !title || !start_at || !end_at){
+            return res.status(400).json({success: false, message: 'Provide full info and be authenticated, please login'});
+        };
+        const newPlan = await Plans.create({task_id, user_id, title, description, start_at, end_at});
+        if(!newPlan){
+            return res.status(404).json({success: false, message: 'Failed to create new plan'})
+        };
+        return res.status(201).json({success: true, message: 'Plan created'})
+    } catch (error) {
+        console.error(`Error with creating a new plan record ${error}`);
+        return res.status(500).json({success: false, message: 'Internal Server Error'});
     };
-    const newPlan = await Plans.create(({task_id, user_id, title, description, start_at, end_at}));
-    if(!newPlan){
-        return res.status(404).json({success: false, message: 'Failed to create new plan'})
-    };
-    return res.status(201).json({success: true, message: 'Plan created'})
-} catch (error) {
-    console.error(`Error with creating a new plan record ${error}`);
-    return res.status(500).json({success: false, message: 'Internal Server Error'});
 };
 
 export const get_task_plans = async(req, res) => {
