@@ -34,11 +34,11 @@ export const getUserByEmail = async(req, res) => {
 
 export const getUserById = async(req, res) => {
     try {
-        const {id} = req.user.id;
+        const id = req.user.id;
         if(!id){
             return res.status(400).json({success: false, message: 'Not authenticated, Please Login'});
         };
-        const user = await Users.findByPk(id);
+        const user = await Users.findByPk(id, {attributes: {exclude: ['password']}});
         if(!user){
             return res.status(404).json({success: false, message: 'Invalid Id'});
         };
