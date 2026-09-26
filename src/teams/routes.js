@@ -15,3 +15,5 @@ router.get('/team/user', authenticate, authorize('user'), get_teams_by_user);
 router.get('/team/:id', authenticate, authorize('user'), get_team_by_id);
 router.put('/teams/:id', authenticate, authorize('user'), update_team);
 router.delete('/teams/:id', authenticate, authorize('user'), delete_team);
+
+export default router;
