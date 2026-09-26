@@ -3,12 +3,12 @@ import Tag_Tasks from "./tag-task-schema.js";
 
 export const new_tag = async(req, res) => {
     try {
-        const {name, color} = req.body;
+        const {team_id, name, color} = req.body;
         const user_id = req.user.id;
         if(!name || !user_id){
             return res.status(400).json({success: false, message: 'Please be authenticated, provide name'})
         };
-        const newtag = await Tags.create({user_id, name, color});
+        const newtag = await Tags.create({team_id, user_id, name, color});
         if(!newtag){
             return res.status(404).json({success: false, message: 'failed to create new tag'});
         };

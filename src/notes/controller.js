@@ -2,12 +2,12 @@ import Notes from "./schema.js";
 
 export const new_notes = async(req, res) => {
     try {
-        const {title, context, task_id} = req.body;
+        const {title, context, task_id, team_id} = req.body;
         const user_id = req.user.id;
         if(!title || !task_id || !user_id){
             return res.status(400).json({success: false, message: 'Provide Full info and be authenticated, please login'})
         };
-        const newNote = await Notes.create({task_id, user_id, title, context});
+        const newNote = await Notes.create({task_id, user_id, title, context, team_id});
         if(!newNote){
             return res.status(404).json({success: false, message: 'Failed to create new note'});
         };

@@ -9,6 +9,14 @@ const Tag_Tasks = sequelize.define('tag_tasks', {
         primaryKey: true,
         allowNull: false
     },
+    team_id:{
+        type:DataTypes.UUID,
+        references:{
+            model: 'teams',
+            key: 'id'
+        },
+        allowNull: true
+    },
     task_id: {
         type: DataTypes.UUID,
         references: {

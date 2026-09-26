@@ -2,11 +2,11 @@ import Sub_Tasks from "./schema.js";
 
 export const new_sub_task = async(req, res) => {
     try {
-        const {task_id, title, is_completed} = req.body;
+        const {team_id, task_id, title, is_completed} = req.body;
         if(!task_id ||!title){
             return res.status(400).json({success: false, message: 'Provide Valid info'});
         };
-        const newSubTask = await Sub_Tasks.create({task_id, title, is_completed});
+        const newSubTask = await Sub_Tasks.create({team_id, task_id, title, is_completed});
         if(!newSubTask){
             return res.status(404).json({success: false, message: 'failed to create'});
         };

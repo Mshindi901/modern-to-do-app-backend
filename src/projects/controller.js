@@ -2,12 +2,12 @@ import Projects from "./schema.js";
 
 export const new_project = async(req, res) => {
     try {
-        const {name, color} = req.body;
+        const {name, color, team_id} = req.body;
         const user_id = req.user.id;
         if(!user_id || !name){
             return res.status(400).json({success: false, message: 'Authenticated Route, provide name'});
         };
-        const newProject = await Projects.create({user_id, name, color});
+        const newProject = await Projects.create({team_id, user_id, name, color});
         if(!newProject){
             return res.status(404).json({success: false, message: 'failed to create project'})
         };

@@ -1,20 +1,12 @@
 import sequelize from '../database/config.js';
-import { DataTypes } from 'sequelize';
+import {DataTypes} from 'sequelize';
 
-const Projects = sequelize.define('projects', {
-    id:{
+const Teams = sequelize.define('teams', {
+    id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
         allowNull: false
-    },
-    team_id:{
-        type:DataTypes.UUID,
-        references:{
-            model: 'teams',
-            key: 'id'
-        },
-        allowNull: true
     },
     user_id: {
         type: DataTypes.UUID,
@@ -26,12 +18,12 @@ const Projects = sequelize.define('projects', {
     },
     name: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull:  false
     },
-    color: {
-        type: DataTypes.STRING,
+    description: {
+        type: DataTypes.TEXT,
         allowNull: true
-    },
+    }
 }, {timestamps: true});
 
-export default Projects;
+export default Teams;

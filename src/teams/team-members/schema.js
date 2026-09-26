@@ -1,25 +1,17 @@
-import sequelize from '../database/config.js';
-import { DataTypes } from 'sequelize';
+import sequelize from "../../database/config.js";
+import { DataTypes } from "sequelize";
 
-const Notes = sequelize.define('notes', {
+const TeamMembers = sequelize.define('team_members', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
         allowNull: false
     },
-    team_id:{
-        type:DataTypes.UUID,
-        references:{
-            model: 'teams',
-            key: 'id'
-        },
-        allowNull: true
-    },
-    task_id: {
+    team_id: {
         type: DataTypes.UUID,
         references: {
-            model: 'tasks',
+            model: 'teams',
             key: 'id'
         },
         allowNull: false
@@ -28,18 +20,19 @@ const Notes = sequelize.define('notes', {
         type: DataTypes.UUID,
         references: {
             model: 'users',
-            key: 'id'
+            key: 'id',
         },
         allowNull: false
     },
-    title: {
-        type: DataTypes.STRING,
+    role: {
+        type: DataTypes.ENUM('owner', 'admin', 'member'),
+        defaultValue: 'member',
         allowNull: false
     },
-    context: {
-        type: DataTypes.TEXT,
+    joined_at: {
+        type: DataTypes.DATE,
         allowNull: true
     }
 }, {timestamps: true});
 
-export default Notes;
+export default TeamMembers;

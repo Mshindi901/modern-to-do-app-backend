@@ -7,7 +7,15 @@ const Tags = sequelize.define('tags', {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
         allowNull: false
-    }, 
+    },
+    team_id:{
+        type:DataTypes.UUID,
+        references:{
+            model: 'teams',
+            key: 'id'
+        },
+        allowNull: true
+    },
     user_id: {
         type: DataTypes.UUID,
         references: {

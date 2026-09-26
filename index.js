@@ -10,6 +10,8 @@ import TaskRoutes from './src/tasks/routes.js';
 import UserRoutes from './src/users/routes.js';
 import NoteRoutes from './src/notes/routes.js';
 import PlanRoutes from './src/plans/routes.js';
+import TeamRoutes from './src/teams/routes.js';
+import TeamMemberRoutes from  './src/teams/team-members/routes.js';
 dotenv.config();
 
 const PORT = process.env.PORT;
@@ -27,6 +29,8 @@ app.use('/api', TaskRoutes);
 app.use('/api', UserRoutes);
 app.use('/api', NoteRoutes);
 app.use('/api', PlanRoutes);
+app.use('/api', TeamRoutes);
+app.use('/api', TeamMemberRoutes);
 
 app.listen(PORT, () => {
     connectDb();

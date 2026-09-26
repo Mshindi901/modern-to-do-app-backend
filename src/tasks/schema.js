@@ -8,6 +8,14 @@ const Tasks = sequelize.define('tasks', {
         primaryKey: true,
         allowNull: false
     },
+    team_id:{
+        type:DataTypes.UUID,
+        references:{
+            model: 'teams',
+            key: 'id'
+        },
+        allowNull: true
+    },
     user_id: {
         type: DataTypes.UUID,
         references: {

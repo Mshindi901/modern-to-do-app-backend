@@ -2,12 +2,12 @@ import Plans from "./schema.js";
 
 export const new_plan = async(req, res) => {
     try {
-        const {task_id, title, description, date, start_at, end_at} = req.body;
+        const {team_id, task_id, title, description, date, start_at, end_at} = req.body;
         const user_id = req.user.id;
         if(!task_id || !user_id || !title || !date || !start_at || !end_at){
             return res.status(400).json({success: false, message: 'Provide full info and be authenticated, please login'});
         };
-        const newPlan = await Plans.create({task_id, user_id, title, description, date, start_at, end_at});
+        const newPlan = await Plans.create({team_id, task_id, user_id, title, description, date, start_at, end_at});
         if(!newPlan){
             return res.status(404).json({success: false, message: 'Failed to create new plan'})
         };
