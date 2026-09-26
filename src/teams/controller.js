@@ -36,10 +36,32 @@ export const get_teams_by_user = async(req, res) => {
         return res.status(500).json({success: false, message: 'Internal Server Error'});
     }
 };
+ 
+export const get_team_by_id = async(req, res) => {
+    try {
+        const {id} = req.params;
+        const user_id = req.user.id;
+        if(!id || !user_id){
+            return res.status(400).json({success: false, message: 'Provide team id and authenticate'});
+        };
+        const membership = await TeamMembers.findOne({where: {team_id: id, user_id}});
+        if(!membership){
+            return res.status(403).json({success: false, message: 'You are not a member of this team'});
+        };
+        const team = await Teams.findByPk(id);
+        if(!team){
+            return res.status(404).json({success: false, message: 'Team not found'});
+        };
+        return res.status(200).json({success: true, message: 'Team fetched', data: team});
+    } catch (error) {
+        console.error(`Error with getting team by id ${error}`);
+        return res.status(500).json({success: false, message: 'Internal Server Error'});
+    }
+};
 
 export const update_team = async(req, res) => {
     try {
-        const id  = req.params;
+        const {id} = req.params;
         if(!id){
             return res.status(400).json({success: false, message: 'Provide record id'});
         };
@@ -47,6 +69,9 @@ export const update_team = async(req, res) => {
         const team = await Teams.findByPk(id);
         if(!team){
             return res.status(404).json({success: false, message: 'Invalid Id'});
+        };
+        if(team.user_id !== req.user.id){
+            return res.status(403).json({success: false, message: 'Only the team owner can update this team'});
         };
         const updated_team = await team.update({name, description});
         if(!updated_team){

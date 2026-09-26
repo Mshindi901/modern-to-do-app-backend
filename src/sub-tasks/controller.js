@@ -62,7 +62,7 @@ export const update_sub_task = async(req, res) => {
             return res.status(404).json({success: false, message: 'Invalid Id'});
         };
         const updated_sub_task = await sub_task.update({task_id, title, is_completed});
-        if(!update_sub_task){
+        if(!updated_sub_task){
             return res.status(404).json({success: false, message: 'failed to update'});
         };
         return res.status(200).json({success: true, message: 'Sub Task updated'})
