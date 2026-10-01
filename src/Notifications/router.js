@@ -14,8 +14,8 @@ const router = express.Router();
 
 router.post('/notifications', authenticate, new_notification);
 router.get('/notifications', authenticate, authorize('user'), get_user_notifications);
-router.get('/notifications/:id', authenticate, authorize('user'), get_user_team_notifications);
 router.get('/notifications/unread', authenticate, authorize('user'), get_user_unread_notifications);
+router.get('/notifications/:id', authenticate, authorize('user'), get_user_team_notifications);
 router.get('/notifications/:id/unread', authenticate, authorize('user'), get_user_team_unread_notifications);
 router.put('/notifications/:id/read', authenticate, authorize('user'), mark_notification_as_read);
 router.delete('/notifications/:id', authenticate, authorize('user'), delete_notification);

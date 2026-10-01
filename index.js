@@ -33,7 +33,7 @@ const socketServer = new Server(server, {
 socketServer.use(authenticateSocket);
 socketServer.on('connection', (socket) => {
     const userId = socket.user.id;
-    socket.join(userId);
+    socket.join(`user_${userId}`);
     console.log(`User ${userId} connected to socket`);
 })
 
@@ -56,7 +56,7 @@ app.use('/api', TeamRoutes);
 app.use('/api', TeamMemberRoutes);    
 app.use('/api', NotificattionRoutes);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     connectDb();
     console.log('Server is running');
 });
