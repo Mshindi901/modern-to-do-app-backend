@@ -101,3 +101,30 @@ export const delete_team = async(req, res) => {
         return res.status(500).json({success: false, message: 'Internal Server Error'});
     }
 };
+
+export const workspace_teams = async (req, res) => {
+    try {
+        const {id: team_id} = req.params;
+        const membership = await TeamMembers.findOne({where: {team_id, user_id: req.user.id}});
+        if (!membership) {
+            return res.status(403).json({success: false, message: 'You are not a member of this team'});
+        }
+
+        const [projects, tasks, tags, subtasks, notes, plans] = await Promise.all([
+            Projects.findAll({where: {team_id}}),
+            Tasks.findAll({where: {team_id}}),
+            Tags.findAll({where: {team_id}}),
+            SubTasks.findAll({where: {team_id}}),
+            Notes.findAll({where: {team_id}}),
+            Plans.findAll({where: {team_id}})
+        ]);
+
+        return res.status(200).json({
+            success: true,
+            data: {projects, tasks, tags, subtasks, notes, plans}
+        });
+    } catch (error) {
+        console.error(`Error with getting team workspace resources ${error}`);
+        return res.status(500).json({success: false, message: 'Internal Server Error'});
+    }
+};
