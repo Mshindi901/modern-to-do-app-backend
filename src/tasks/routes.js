@@ -10,7 +10,8 @@ import {
     update_task_info,
     update_task_priority,
     star_task,
-    delete_tasks
+    delete_tasks,
+    get_team_tasks
 } from './controller.js';
 import {authenticate, authorize} from '../middleware/auth.js'
 
@@ -22,6 +23,7 @@ router.get('/task/project/:id', authenticate, authorize('user'), get_task_by_pro
 router.post('/task/priority', authenticate, authorize('user'), get_task_by_priority);
 router.get('/task/starred', authenticate, authorize('user'), get_starred_tasks);
 router.get('/task/completed', authenticate, authorize('user'), get_completed_task);
+router.get('/task/team/:id', authenticate, authorize('user'), get_team_tasks);
 router.put('/task/complete/:id', authenticate, authorize('user'), update_task_completion);
 router.put('/task/starred/:id', authenticate, authorize('user'), star_task);
 router.put('/task/:id', authenticate, authorize('user'), update_task_info);

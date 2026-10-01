@@ -5,7 +5,8 @@ import {
     get_task_notes,
     get_user_notes,
     update_note,
-    delete_notes
+    delete_notes,
+    get_team_notes
 } from './controller.js';
 import {authenticate, authorize} from '../middleware/auth.js'
 
@@ -15,6 +16,7 @@ router.post('/notes', authenticate, authorize('user'), new_notes);
 router.get('/notes/user', authenticate, authorize('user'), get_user_notes);
 router.get('/notes/tasks/:id', authenticate, authorize('user'), get_task_notes);
 router.get('/notes/:id', authenticate, authorize('user'), get_by_id);
+router.get('/notes/team/:id', authenticate, authorize('user'), get_team_notes);
 router.put('/notes/:id', authenticate, authorize('user'), update_note);
 router.delete('/notes/:id', authenticate, authorize('user'), delete_notes);
 

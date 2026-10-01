@@ -1,4 +1,5 @@
 import Projects from "./schema.js";
+import TeamMembers from '../teams/team-members/schema.js';
 
 export const new_project = async(req, res) => {
     try {
@@ -71,6 +72,28 @@ export const delete_project_id = async(req, res) => {
         return res.status(200).json({success: true, messsage: 'Deleted Project'});
     } catch (error) {
         console.error(`Error with deleting project by id ${error}`);
+        return res.status(500).json({success: false, message: 'Internal Server Error'});
+    }
+};
+
+export const get_team_projects = async(req, res) => {
+    try {
+        const {id} = req.params;
+        const user_id = req.user.id;
+        if(!id || !user_id){
+            return res.status(400).json({success: false, message: 'Provide team id and be authenticated, please login'});
+        };
+        const is_member = await TeamMembers.findOne({where:{team_id: id, user_id: user_id}});
+        if(!is_member){
+            return res.status(403).json({success: false, message: 'You are not a member of this team'});
+        };
+        const projects = await Projects.findAll({where:{team_id: id}});
+        if(!projects || projects.length === 0){
+            return res.status(404).json({success: false, message: 'No projects fetched'});
+        };
+        return res.status(200).json({success: true, message: 'Projects fetched', data: projects});
+    } catch(error) {
+        console.error(`Error with getting team projects ${error}`);
         return res.status(500).json({success: false, message: 'Internal Server Error'});
     }
 };

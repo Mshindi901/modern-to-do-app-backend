@@ -3,7 +3,8 @@ import {
     new_project,
     get_all_user_projects,
     update_projects,
-    delete_project_id
+    delete_project_id,
+    get_team_projects
 } from './controller.js';
 import {authenticate, authorize} from '../middleware/auth.js'
 
@@ -11,6 +12,7 @@ const router = express.Router();
 
 router.post('/project', authenticate, authorize('user'), new_project);
 router.get('/project/user', authenticate, authorize('user'), get_all_user_projects);
+router.get('/project/team/:id', authenticate, authorize('user'), get_team_projects);
 router.put('/projects/user/:id', authenticate, authorize('user'), update_projects);
 router.delete('/projects/:id', authenticate, authorize('user'), delete_project_id);
 

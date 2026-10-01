@@ -1,4 +1,5 @@
 import Notes from "./schema.js";
+import TeamMembers  from '../teams/team-members/schema.js';
 
 export const new_notes = async(req, res) => {
     try {
@@ -108,5 +109,30 @@ export const delete_notes = async(req, res) => {
     } catch (error) {
         console.error(`Error with deleting note by record id ${error}`);
         return res.status(500).json({success: false, message: 'Internal server Error'});
+    }
+};
+
+export const get_team_notes = async(req, res) => {
+    try {
+        const {id} = req.params;
+        if(!id){
+            return res.status(400).json({success: false, message: 'Provide team record id'});
+        };
+        const user_id = req.user.id;
+        if(!user_id){
+            return res.status(400).json({success: false, message: 'Please be authenticated'});
+        };
+        const is_member = await TeamMembers.findOne({where: {team_id: id, user_id}});
+        if(!is_member){
+            return res.status(403).json({success: false, message: 'You are not a member of this team'});
+        };
+        const notes = await Notes.findAll({where: {team_id: id}});
+        if(!notes || notes.length === 0){
+            return res.status(404).json({success: false, message: 'No notes fetched'});
+        };
+        return res.status(200).json({success: true, message: 'Notes fetched', data: notes});
+    } catch(error) {
+        console.error(`Error with getting team notes ${error}`);
+        return res.status(500).json({success: false, message: 'Internal Server Error'});
     }
 };

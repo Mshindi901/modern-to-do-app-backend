@@ -1,5 +1,6 @@
 import Tags from "./tag-schema.js";
 import Tag_Tasks from "./tag-task-schema.js";
+import TeamMembers from '../teams/team-members/schema.js';
 
 export const new_tag = async(req, res) => {
     try {
@@ -110,6 +111,28 @@ export const get_task_tag = async(req, res) => {
         return res.status(200).json({success: true, message: 'Fetched Tag', data: tag})
     } catch (error) {
         console.error(`Error with getting the tag for a task ${error}`);
+        return res.status(500).json({success: false, message: 'Internal Server Error'});
+    }
+};
+
+export const get_team_tags = async(req, res) => {
+    try {
+        const {id} = req.params;
+        const user_id = req.user.id;
+        if(!id || !user_id){
+            return res.status(400).json({success: false, message: 'Provide team record id and be authenticated'});
+        };
+        const is_member = await TeamMembers.findOne({where:{team_id: id, user_id: user_id}});
+        if(!is_member){
+            return res.status(403).json({success: false, message: 'You are not a member of this team'});
+        };
+        const tags = await Tags.findAll({where:{team_id: id}});
+        if(!tags || tags.length == 0){
+            return res.status(404).json({success: false, message: 'No tags fetched'})
+        };
+        return res.status(200).json({success: true, message: 'Fetched team tags', data: tags});
+    } catch(error) {
+        console.error(`Error with getting team tags ${error}`);
         return res.status(500).json({success: false, message: 'Internal Server Error'});
     }
 };

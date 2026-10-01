@@ -5,7 +5,8 @@ import {
     get_user_tags,
     update_tag, 
     delete_tag,
-    add_tag_to_task
+    add_tag_to_task,
+    get_team_tags
 } from './controller.js';
 import {authenticate, authorize} from '../middleware/auth.js'
 
@@ -15,6 +16,7 @@ router.post('/tags/user', authenticate, authorize('user'),  new_tag);
 router.post('/tags/task', authenticate, authorize('user'), add_tag_to_task);
 router.get('/tasks/user', authenticate, authorize('user'), get_user_tags);
 router.get('/tag/task/:id', authenticate, authorize('user'), get_task_tag);
+router.get('/tags/team/:id', authenticate, authorize('user'), get_team_tags);
 router.put('/tags/:id', authenticate, authorize('user'), update_tag);
 router.delete('/tags/:id', authenticate, authorize('user'), delete_tag);
 
