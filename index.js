@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import {connectDb} from './src/database/connect.js'
+import {authenticateSocket} from './src/middleware/auth.js';
 import AuthRoutes from './src/auth/routes.js';
 import ProjectRoutes from './src/projects/routes.js';
 import SubTaskRoutes from './src/sub-tasks/routes.js';
@@ -52,7 +53,7 @@ app.use('/api', UserRoutes);
 app.use('/api', NoteRoutes);
 app.use('/api', PlanRoutes);
 app.use('/api', TeamRoutes);
-app.use('/api', TeamMemberRoutes);
+app.use('/api', TeamMemberRoutes);    
 app.use('/api', NotificattionRoutes);
 
 app.listen(PORT, () => {

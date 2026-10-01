@@ -2,6 +2,11 @@ import jwt from "jsonwebtoken";
 import dotenv from 'dotenv';
 dotenv.config()
 
+
+const verifyToken = (token) => {
+    return jwt.verify(token, process.env.ACCESS_TOKEN);
+};
+
 export const authenticate = (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
@@ -20,10 +25,7 @@ export const authenticate = (req, res, next) => {
             });
         }
 
-        const decoded = jwt.verify(
-            token,
-            process.env.ACCESS_TOKEN
-        );
+        const decoded = verifyToken(token);
 
         req.user = decoded;
 
@@ -53,5 +55,19 @@ export const authorize = (...allowedRoles) => {
         }
 
         next();
+    };
+};
+
+export const authenticateSocket = (socket, next) => {
+    try {
+        const token = socket.handshake.auth.token;
+        if (!token) {
+            return next(new Error("Authentication required"));
+        };
+        socket.user = verifyToken(token);
+        next();
+    } catch (error) {
+        console.error(`Error with authenticating socket ${error}`);
+        next(error);
     };
 };
