@@ -1,5 +1,8 @@
 import Notes from "./schema.js";
 import TeamMembers  from '../teams/team-members/schema.js';
+import Tasks from '../tasks/schema.js';
+import Notification from '../Notifications/schema.js';
+import {socketServer} from '../../index.js';
 
 export const new_notes = async(req, res) => {
     try {
@@ -8,9 +11,39 @@ export const new_notes = async(req, res) => {
         if(!title || !task_id || !user_id){
             return res.status(400).json({success: false, message: 'Provide Full info and be authenticated, please login'})
         };
+        if(team_id){
+            const membership = await TeamMembers.findOne({where: {team_id, user_id}});
+            if(!membership){
+                return res.status(403).json({success: false, message: 'You are not a member of this team'});
+            };
+        };
         const newNote = await Notes.create({task_id, user_id, title, context, team_id});
         if(!newNote){
             return res.status(404).json({success: false, message: 'Failed to create new note'});
+        };
+        if(team_id){
+            try {
+                const [members, task] = await Promise.all([
+                    TeamMembers.findAll({where: {team_id}, attributes: ['user_id']}),
+                    Tasks.findByPk(task_id, {attributes: ['title']}),
+                ]);
+                const recipients = [...new Set(members
+                    .map((member) => member.user_id)
+                    .filter((memberId) => memberId !== user_id))];
+                const notifications = await Promise.all(recipients.map((recipientId) => Notification.create({
+                    user_id: recipientId,
+                    team_id,
+                    title: 'New note on a team task',
+                    message: `A note titled "${title}" was added to "${task?.title || 'a team task'}".`,
+                    entity_id: newNote.id,
+                    entity_type: 'note',
+                })));
+                notifications.forEach((notification) => {
+                    socketServer.to(`user_${notification.user_id}`).emit('new_notification', notification);
+                });
+            } catch (notificationError) {
+                console.error(`Error with notifying team members about a new note ${notificationError}`);
+            }
         };
         return res.status(201).json({success: true, message: 'Note created'});
     } catch (error) {
