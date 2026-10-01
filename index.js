@@ -12,13 +12,35 @@ import NoteRoutes from './src/notes/routes.js';
 import PlanRoutes from './src/plans/routes.js';
 import TeamRoutes from './src/teams/routes.js';
 import TeamMemberRoutes from  './src/teams/team-members/routes.js';
+import NotificattionRoutes from  './src/Notifications/router.js';
+
+
+import {createServer} from 'http';
+import {Server} from 'socket.io';
 dotenv.config();
 
 const PORT = process.env.PORT;
 const app = express();
+const server = createServer(app);
+const socketServer = new Server(server, {
+    cors: {
+        origin: process.env.CLIENT_URL,
+        credentials: true
+    }
+});
+
+socketServer.use(authenticateSocket);
+socketServer.on('connection', (socket) => {
+    const userId = socket.user.id;
+    socket.join(userId);
+    console.log(`User ${userId} connected to socket`);
+})
+
+export {socketServer};
+
 app.set('trust proxy', true);
 app.use(express.json());
-app.use(cors({origin: ['https://modern-to-do-app-frontend.vercel.app']}))
+app.use(cors({origin: [process.env.CLIENT_URL]}))
 
 
 app.use('/api', AuthRoutes);
@@ -31,6 +53,7 @@ app.use('/api', NoteRoutes);
 app.use('/api', PlanRoutes);
 app.use('/api', TeamRoutes);
 app.use('/api', TeamMemberRoutes);
+app.use('/api', NotificattionRoutes);
 
 app.listen(PORT, () => {
     connectDb();
