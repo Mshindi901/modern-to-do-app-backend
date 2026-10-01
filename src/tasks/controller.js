@@ -3,14 +3,14 @@ import TeamMembers from '../teams/team-members/schema.js';
 
 export const new_task = async(req, res) => {
     try {
-        const {project_id, title, context, due_date, priority, is_completed, is_starred} = req.body
+        const {team_id, project_id, title, context, due_date, priority, is_completed, is_starred} = req.body
         const user_id = req.user.id;
 
         if (!user_id || !title || !priority || typeof is_completed !== 'boolean' || typeof is_starred !== 'boolean') {
             return res.status(400).json({success: false, message: 'Provide all required info'});
         }
 
-        const newTask = await Tasks.create({user_id, project_id, title, context, due_date, priority, is_completed, is_starred});
+        const newTask = await Tasks.create({team_id, user_id, project_id, title, context, due_date, priority, is_completed, is_starred});
         if(!newTask){
             return res.status(404).json({success: false, message: 'failed to create new task record'});
         };
