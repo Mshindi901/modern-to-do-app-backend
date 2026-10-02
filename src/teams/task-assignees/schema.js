@@ -27,7 +27,7 @@ const TaskAssignee = sequelize.define('task_assignees', {
     assigned_by: {
         type: DataTypes.UUID,
         references: {
-            model: 'team_members',
+            model: 'user',
             key: 'id'
         },
         allowNull: false
