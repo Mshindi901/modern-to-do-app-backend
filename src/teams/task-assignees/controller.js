@@ -5,7 +5,7 @@ export const add_task_assignee = async (req, res) => {
     try {
         const { task_id, member_id} = req.body;
         const user_id = req.user.id;
-        if(!task_id || !member_id || !assigned_by || !user_id) {
+        if(!task_id || !member_id || !user_id) {
             return res.status(400).json({success: false, message: 'Provide all fields and be authenticated'});
         };
         const is_member = await TeamMembers.findOne({where: {id: member_id}});

@@ -1,4 +1,6 @@
 import TeamMembers from "./schema.js";
+import Users from "../../auth/schema.js";
+import { Op } from "sequelize";
 
 export const new_team_member = async(req, res) => {
     try {
@@ -38,7 +40,16 @@ export const get_members_by_team = async(req, res) => {
             return res.status(403).json({success: false, message: 'You are not a member of this team'});
         };
         const members = await TeamMembers.findAll({where:{team_id: team_id}});
-        return res.status(200).json({success: true, message: 'Members Fetched', data: members})
+        const users = await Users.findAll({
+            where: {id: {[Op.in]: members.map((member) => member.user_id)}},
+            attributes: ['id', 'name']
+        });
+        const namesByUserId = new Map(users.map((user) => [user.id, user.name]));
+        const membersWithNames = members.map((member) => ({
+            ...member.toJSON(),
+            name: namesByUserId.get(member.user_id) || null
+        }));
+        return res.status(200).json({success: true, message: 'Members Fetched', data: membersWithNames})
     } catch (error) {
         console.error(`Error with getting team members ${error}`);
         return res.status(500).json({success: false, message: 'Internal Server Error'});
