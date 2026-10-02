@@ -14,6 +14,7 @@ import PlanRoutes from './src/plans/routes.js';
 import TeamRoutes from './src/teams/routes.js';
 import TeamMemberRoutes from  './src/teams/team-members/routes.js';
 import NotificattionRoutes from  './src/Notifications/router.js';
+import TaskAssigneeRoutes from './src/teams/task-assignees/routes.js';
 
 
 import {createServer} from 'http';
@@ -55,6 +56,7 @@ app.use('/api', PlanRoutes);
 app.use('/api', TeamRoutes);
 app.use('/api', TeamMemberRoutes);    
 app.use('/api', NotificattionRoutes);
+app.use('/api', TaskAssigneeRoutes);
 
 server.listen(PORT, () => {
     connectDb();
