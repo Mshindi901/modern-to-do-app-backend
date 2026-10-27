@@ -39,6 +39,8 @@ export const signin = async(req, res) => {
         const rawIp = forwardedIp || req.socket?.remoteAddress || req.ip || 'unknown';
         const normalizeIp = (value) => value?.startsWith('::ffff:') ? value.replace('::ffff:', '') : value;
         const ip = normalizeIp(rawIp);
+
+
         const is_user = await Users.findOne({where:{email: email}});
         if(!is_user){
             return res.status(404).json({success: false, message: 'Email does not exist'});
@@ -48,7 +50,6 @@ export const signin = async(req, res) => {
         if(!is_password){
             return res.status(404).json({success: false, message: 'Invalid Password'});
         };
-
         const loginDate = new Date();
         const visitorLoggedIn = logged_in || logged_at || loginDate.toISOString().split('T')[0];
         const visitorTime = time || loginDate.toLocaleTimeString('en-GB', { hour12: false });

@@ -13,6 +13,7 @@ export const authenticate = (req, res, next) => {
 
         if (!authHeader) {
             return res.status(401).json({
+                success: false,
                 message: "Authentication required"
             });
         }
